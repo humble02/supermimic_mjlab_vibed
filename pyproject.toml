@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "supermimic-mjlab"
+version = "0.1.0"
+description = "SuperMimic G1 motion tracking with mjlab and MuJoCo Warp"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "mjlab==1.2.0",
+  "torch==2.9.0",
+  "numpy>=2.3,<3",
+  "scipy>=1.16,<2",
+  "mujoco==3.6.0",
+  "mujoco-warp==3.6.0",
+  "warp-lang==1.12.0",
+  "matplotlib>=3.10",
+  "pillow>=11",
+]
+
+[dependency-groups]
+dev = ["pytest>=9", "ruff>=0.14"]
+
+[tool.setuptools.packages.find]
+include = ["supermimic*"]
+
+[tool.uv]
+override-dependencies = ["mujoco==3.6.0"]
+
+[tool.uv.sources]
+mjlab = { git = "https://github.com/mujocolab/mjlab.git", rev = "1a00a62295cef24e3366f928991d75757c9bf830" }
+mujoco-warp = { git = "https://github.com/google-deepmind/mujoco_warp.git", rev = "875c4caf06d71b12b2036c327e7a07ce08a78b9a" }
+mujoco = { index = "pypi" }
+torch = { index = "pytorch-cu128" }
+warp-lang = { index = "nvidia" }
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["gpu: requires CUDA and prepared G1/motion data"]
