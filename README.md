@@ -43,6 +43,22 @@ data/
 [LAFAN1 Retargeting Dataset](https://huggingface.co/datasets/lvhaidong/LAFAN1_Retargeting_Dataset)。
 LAFAN1 动作为 CC BY-NC-ND 4.0，G1 描述为 Unitree BSD-3-Clause，代码保留原项目的 [MIT 许可证](LICENSE)。
 
+### 离线服务器
+
+服务器无需访问 GitHub/PyPI。将源码、`data/`、uv 可执行文件，以及在联网机器上准备的离线依赖包
+通过 SSH 传入。离线依赖包包含 `requirements.txt`（精确版本）、`wheels/*.whl`，
+以及可选的 `sha256.json`（文件名到 SHA256 的映射）。依赖包须匹配 Linux x86_64 / Python 3.12。
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+CUDA_VISIBLE_DEVICES=0 bash tools/setup_offline.sh .cache/deploy/offline
+CUDA_VISIBLE_DEVICES=0 ./run_local.sh -m pytest -q
+CUDA_VISIBLE_DEVICES=0 ./run_train.sh lafan1_h100
+```
+
+离线安装脚本强制 `UV_OFFLINE=1`。`run_local.sh` 直接使用已安装的环境，不会触发依赖下载。
+`CUDA_VISIBLE_DEVICES=0` 将程序限定在一张物理 GPU 上；训练中看到的设备为 `cuda:0`。
+
 ## 验证
 
 ```bash
